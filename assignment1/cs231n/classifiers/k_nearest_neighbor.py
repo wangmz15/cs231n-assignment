@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 import numpy as np
 from collections import Counter
 
@@ -72,9 +73,8 @@ class KNearestNeighbor(object):
         # training point, and store the result in dists[i, j]. You should   #
         # not use a loop over dimension.                                    #
         #####################################################################
- 
-         dists[i,j] = np.sqrt(np.sum(np.square(X[i,:]-self.X_train[j,:])))
-        #dists[i,j] = np.linalg.norm(self.X_train[j,:]-X[i,:])
+        #dists[i,j] = np.sqrt(np.sum(np.square(X[i,:]-self.X_train[j,:])))
+        dists[i,j] = np.linalg.norm(self.X_train[j,:]-X[i,:])
         
         #####################################################################
         #                       END OF YOUR CODE                            #
@@ -99,7 +99,13 @@ class KNearestNeighbor(object):
       # Compute the l2 distance between the ith test point and all training #
       # points, and store the result in dists[i, :].                        #
       #######################################################################
-      dists[i,:] = np.linalg.norm(self.X_train - X[i,:], axis = 1)
+        # np.linalg.norm(x, ord=None, axis=None, keepdims=False)  
+        # ord 1、2（默认）、np.inf, 1范数，2范数，无穷范数（最大值）
+        # axis = 1，求行向量范数， axis = 0，求列向量范数， axis = None，求矩阵范数
+        # keepdims 是否保持维度，false返回的就是行向量
+        # 广播机制，self.X_train - X[i,:]每一行代表X[i]与每个训练集的差，按行求二范数正好，也不需要保持维度
+        
+        dists[i,:] = np.linalg.norm(self.X_train - X[i,:], axis = 1)
       #######################################################################
       #                         END OF YOUR CODE                            #
       #######################################################################
@@ -127,6 +133,10 @@ class KNearestNeighbor(object):
 #     HINT: Try to formulate the l2 distance using matrix multiplication    #
 #           and two broadcast sums.                                         #
     #########################################################################
+    
+    # 有一点难想，但是好好研究就知道：
+    # dist[i,j] = |X[i]-X_t[j]| = (X[i]^2-2*X[i]*X_train[j]+X_train[j]^2)^0.5
+    # 其中，X[i]是列向量，X_train[j]是行向量
     
     dists += (self.X_train **2).sum(axis = 1).reshape(1,num_train)
     dists += (X**2).sum(axis = 1).reshape(num_test,1)
