@@ -68,14 +68,13 @@ def svm_loss_vectorized(W, X, y, reg):
   Inputs and outputs are the same as svm_loss_naive.
   """
   loss = 0.0
-  dW = np.zeros(W.shape) # initialize the gradient as zero
+  dW = np.zeros(W.shape) # initialize the gradient as zero即要计算的梯度
 
   #############################################################################
   # TODO:                                                                     #
   # Implement a vectorized version of the structured SVM loss, storing the    #
   # result in loss.实现结构化SVM损失的矢量化版本，将结果存储在损失中。                #
   #############################################################################
-  dW = np.zeros(W.shape) # initialize the gradient as zero 即要计算的梯度
 
   # compute the loss and the gradient
   num_classes = W.shape[1]
